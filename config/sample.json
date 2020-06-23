@@ -1,0 +1,9 @@
+{
+  "shopifyApi": {
+    "shopName": "<shop>",
+    "accessToken": "<accesstokenstring>",
+    "apiVersion": "<version>",
+    "autoLimit": "<boolean>",
+    "timeout": "<number>"
+  }
+}

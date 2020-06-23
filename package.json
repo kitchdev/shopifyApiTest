@@ -1,0 +1,15 @@
+{
+  "name": "shopifytest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "shopify-api-node": "file:../Shopify-api-node-3.3.2"
+  }
+}
