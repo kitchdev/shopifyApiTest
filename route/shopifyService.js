@@ -2,15 +2,6 @@ const Shopify = require("shopify-api-node");
 const sleep = require('util').promisify(setTimeout)
 const config = require('config')
 
-const config = {
-  shopName: "anagraph-dev",
-  accessToken: "cfd60618c37b309a128fce011adee9e4",
-  apiVersion: '2020-04',
-  autoLimit: true,
-  timeout: 380000,
-}
-
-
 exports.listCustomersPaginate = async (req, res) => {
   req.setTimeout(600000)
   const shopify = new Shopify(config)
