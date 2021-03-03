@@ -2,6 +2,8 @@ const Shopify = require("shopify-api-node");
 const sleep = require('util').promisify(setTimeout)
 const Config = require('config')
 
+const testOrder = require('../orders.json')
+
 const config = {
   shopName: Config.get('shopifyApi.shopName'),
   accessToken: Config.get('shopifyApi.accessToken'),
@@ -114,4 +116,66 @@ exports.listCancelledOrders = async (req, res) => {
 exports.listFufilledOrders = async (req, res) => {
   req.setTimeout(600000)
   const shopify = new Shopify(config)
+}
+
+exports.createPendingOrders = async (req, res) => {
+  req.setTimeout(600000)
+  const limit = 1000
+  const shopify = new Shopify(config)
+  let index = 0
+  try {
+    res.status(200).send({ success: true, message: 'created 1000 orders is in process'})
+    console.log(testOrder)
+    while (index < limit) {
+      const shopRes = await shopify.order.create(testOrder)
+      index++
+      console.log(index)
+      await sleep(15000)
+    }
+  } catch (err) {
+    console.error('error =>', err)
+    res.status(400).send({ success: false, message: err })
+  }
+}
+
+exports.createOrderWebhook = async (req, res) => {
+  req.setTimeout(600000)
+  const shopify = new Shopify(config)
+  try {
+    const webhookRes = await shopify.webhook.create({
+      topic: 'orders/create',
+      address: 'https://us-central1-geometric-anagraph-dev.cloudfunctions.net/importPastOrders/recieveshopifyorder/',
+      format: 'json',
+      fields: ['id', 'created_at', 'customer', 'line_items']
+    })
+    res.status(200).send(webhookRes)
+  } catch (err) {
+    console.error('error => ', err)
+    res.status(400).send({ success: false, message: err })
+  }
+}
+exports.listWebhooks = async (req, res) => {
+  req.setTimeout(600000)
+  const shopify = new Shopify(config)
+  try {
+    const list = await shopify.webhook.list()
+    res.status(200).send(list)
+  } catch (err) {
+    console.error(err)
+    res.status(400).send({ success: false, message: err })
+  }
+}
+
+exports.deleteWebhooks = async (req, res) => {
+  req.setTimeout(600000)
+  const shopify = new Shopify(config)
+  try {
+    const list = await shopify.webhook.list()
+    const id = list[0].id
+    const deleteRes = await shopify.webhook.delete(id)
+    res.status(200).send(deleteRes)
+  } catch (err) {
+    console.error(err)
+    res.status(400).send({ success: false, message: err })
+  }
 }
